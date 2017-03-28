@@ -67,7 +67,7 @@ RUN docker-php-ext-install pdo_mysql
 # install composer
 ENV COMPOSER_HOME=/tmp/.composer
 RUN curl -XGET https://getcomposer.org/installer > composer-setup.php && \
-    php composer-setup.php --install-dir=/bin --filename=composer && \
+    php composer-setup.php --install-dir=/bin --filename=composer --version=1.3.3 && \
     rm composer-setup.php
 RUN usermod -u 1000 www-data && \
     mkdir -p /var/www/html && \
