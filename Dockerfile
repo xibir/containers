@@ -1,4 +1,4 @@
-FROM php:7.1-fpm
+FROM php:7.2-fpm
 
 ENV REFRESHED_AT 2017-03-29
 
@@ -9,7 +9,7 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
     rm -rf /var/lib/apt/lists/*
 
 # build redis.so
-RUN git clone -b php7 https://github.com/phpredis/phpredis.git /opt/phpredis \
+RUN git clone -b 4.1.0 https://github.com/phpredis/phpredis.git /opt/phpredis \
     && ( \
         cd /opt/phpredis \
         && phpize \
@@ -21,7 +21,7 @@ RUN git clone -b php7 https://github.com/phpredis/phpredis.git /opt/phpredis \
     && docker-php-ext-enable redis.so
 
 # build memcached.so
-RUN git clone -b php7 https://github.com/php-memcached-dev/php-memcached /opt/phpmemcached \
+RUN git clone -b REL3_0 https://github.com/php-memcached-dev/php-memcached /opt/phpmemcached \
     && ( \
         cd /opt/phpmemcached \
         && phpize \
@@ -33,7 +33,7 @@ RUN git clone -b php7 https://github.com/php-memcached-dev/php-memcached /opt/ph
     && docker-php-ext-enable memcached.so
 
 # build xdebug.so
-RUN git clone -b xdebug_2_5 https://github.com/xdebug/xdebug.git /opt/phpxdebug \
+RUN git clone -b xdebug_2_6 https://github.com/xdebug/xdebug.git /opt/phpxdebug \
     && ( \
         cd /opt/phpxdebug \
         && phpize \
@@ -55,10 +55,10 @@ xdebug.remote_autostart=1\
 # build mongodb
 RUN apt-get update && apt-get install -y libssl-dev
 RUN cd /tmp/ && \
-    curl -O https://pecl.php.net/get/mongodb-1.2.8.tgz && \
-    tar zxvf mongodb-1.2.8.tgz && \
+    curl -O https://pecl.php.net/get/mongodb-1.5.1.tgz && \
+    tar zxvf mongodb-1.5.1.tgz && \
     mkdir -p /usr/src/php/ext && \
-    mv mongodb-1.2.8 /usr/src/php/ext/mongodb
+    mv mongodb-1.5.1 /usr/src/php/ext/mongodb
 RUN docker-php-ext-install mongodb
 
 # install extensions
@@ -67,7 +67,7 @@ RUN docker-php-ext-install pdo_mysql
 # install composer
 ENV COMPOSER_HOME=/tmp/.composer
 RUN curl -XGET https://getcomposer.org/installer > composer-setup.php && \
-    php composer-setup.php --install-dir=/bin --filename=composer --version=1.3.0 && \
+    php composer-setup.php --install-dir=/bin --filename=composer --version=1.6.5 && \
     rm composer-setup.php
 RUN usermod -u 1000 www-data && \
     mkdir -p /var/www/html && \
